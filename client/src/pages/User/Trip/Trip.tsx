@@ -1,49 +1,66 @@
-import "./Trip.css"
+import "./Trip.css";
 import AddExpense from "../Forms/AddExpense";
-import { TbTrashX } from "react-icons/tb";
-import { TbBookmark } from "react-icons/tb";
-import { TbUsersPlus } from "react-icons/tb";
-import { TbArrowBigUpLine } from "react-icons/tb";
-import { TbCash } from "react-icons/tb";
-import { TbPlus } from "react-icons/tb"
+import { TbTrashX, TbBookmark, TbUsersPlus, TbArrowBigUpLine, TbCash, TbPlus } from "react-icons/tb";
 import { useState } from "react";
 
 export default function Trip() {
+    const [addExpense, setAddExpense] = useState(false);
+    const [totalAmount, setTotalAmount] = useState(0); // State for total amount
+    const [items, setItems] = useState<string[]>([]);
+    const [dates, setDate] = useState<Date[]>([]);
+    const [amounts, setAmount] = useState<number[]>([]);
 
-    let [addExpense, setAddExpense] = useState(false);
+    // Add an item to the list
+    const addItem = (item: string) => {
+        setItems([...items, item]);
+    };
+
+    const addDate = (date: Date) => {
+        setDate([...dates, date])
+    };
+
+    const addAmount = (amount: number) => {
+        setAmount([...amounts, amount]);
+    }
+
+    function handleAddExpense(amount: number, date: Date) {
+        addItem("Chirag owe you $" + amount / 2);
+        console.log(items);
+        addDate(date);
+        addAmount(amount);
+        setTotalAmount((prevAmount) => prevAmount + amount); // Update the total amount
+    }
+
+
     return (
         <>
-        <AddExpense display = {addExpense} setDisplay={setAddExpense}/>
+            <AddExpense
+                display={addExpense}
+                setDisplay={setAddExpense}
+                onAddExpense={handleAddExpense} // Pass the handler to AddExpense
+            />
 
-        <div className="trip">
-            <TripCu expense={setAddExpense} />
+            <div className="trip">
+                <TripCu expense={setAddExpense} totalAmount={totalAmount} items={items} />
 
-            <div className="tripTransactions">
+                <div className="tripTransactions">
+                    <TripTransactionSection date={"October 31, 2024"} num={items.length} val={totalAmount}>
+                        {dates.map((date, index) => (
+                            <TripTransaction
+                                key={index}
+                                head={"YOU"}
+                                date={date} // Format date if needed
+                                amount={amounts[index]}
+                            />
+                        ))}
 
-                <TripTransactionSection date={'Feburary 31, 2023'} num={'04'} val={'1234'}>
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                </TripTransactionSection>
-
-                <TripTransactionSection date={'Feburary 31 2023'} num={'04'} val={'1234'}>
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                    <TripTransaction head={'Phalana Dhimkana'} date={'Feburary 31 2023'} amount={123} />
-                </TripTransactionSection>
-
+                    </TripTransactionSection>
+                </div>
             </div>
-
-        </div>
         </>
-    )
+    );
 }
+
 
 
 
@@ -95,44 +112,45 @@ function TripTransaction({ head, date, amount }: any) {
 }
 
 
-function TripCu({expense} :any) {
+function TripCu({ expense, totalAmount, items }: any) {
     return (
-        <>
         <div className="tripcu">
-            
             <div className="tripInfo">
-                <h4>Overall, You owe $10000</h4>
-                <p>Chirag B. owes you $200</p>
-                <p>You owe Chirag B. $200</p>
-                <p>Chirag B. owes you $200</p>
-                <p>Chirag B. owes you $200</p>
+                <h4>Overall, You are owed ${totalAmount / 2}</h4>
+                {items.map((item: string, index: number) => (
+                    <p key={index}>{item}</p>
+                ))}
             </div>
 
             <div className="tripActions">
-
                 <div className="tripAction actionyellow">
-                    <div className="tripButton"><TbArrowBigUpLine /></div>
+                    <div className="tripButton">
+                        <TbArrowBigUpLine />
+                    </div>
                     Export trip
                 </div>
 
-                <div className="tripAction actionblue" onClick={() => {expense(true)}}>
-                    <div className="tripButton"><TbPlus /></div>
+                <div className="tripAction actionblue" onClick={() => expense(true)}>
+                    <div className="tripButton">
+                        <TbPlus />
+                    </div>
                     Add an expense
                 </div>
 
                 <div className="tripAction actionred">
-                    <div className="tripButton"><TbCash /></div>
+                    <div className="tripButton">
+                        <TbCash />
+                    </div>
                     See totals
                 </div>
 
                 <div className="tripAction actiongreen">
-                    <div className="tripButton"><TbUsersPlus /></div>
+                    <div className="tripButton">
+                        <TbUsersPlus />
+                    </div>
                     Invite a friend
                 </div>
-
             </div>
         </div>
-        </>
-    )
-
+    );
 }

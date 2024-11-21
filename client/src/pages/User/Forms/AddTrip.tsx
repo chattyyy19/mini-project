@@ -1,6 +1,5 @@
 import { useState } from "react";
 import "./Froms.css"
-
 import { FaXmark } from "react-icons/fa6"
 import axios from "axios";
 import config from "../../../config";
