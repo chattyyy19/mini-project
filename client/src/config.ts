@@ -1,6 +1,6 @@
 var config = {
 
-    apiURL: 'http://localhost:8000/'
+    apiURL: 'http://43.205.85.12/'
 
 }
 
