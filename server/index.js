@@ -7,6 +7,7 @@ const { verify } = require('./Controlers/verify')
 const { auth } = require('./Controlers/Middlewares/auth')
 const { addTrip, getTrips, deleteTrip } = require('./Controlers/trip')
 
+
 const app = express()
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(cors())
